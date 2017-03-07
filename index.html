@@ -9,6 +9,7 @@
 
 			app.controller('messages', function($scope, $http){
 				setInterval(function(){
+					console.log('--> Getting;');
 					$scope.$apply(function(){
 						$http.get('/api/get_messages').then(function(data){
 							$scope.messages = data.data.split(',');
@@ -33,8 +34,8 @@
 				</div>
 				<div class='panel-body'>
 					<table class='table table-striped'>
-						<tr ng-repeat='message in messages'>
-							<td>{{message}}</td>
+						<tr ng-repeat='message in messages track by $index'>
+							<td>{{message.message}}</td>
 						</tr>
 					</table>
 					<div class='row'>
