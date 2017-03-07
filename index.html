@@ -1,0 +1,54 @@
+<html ng-app='app'>
+	<head>
+		<title>.</title>
+		<link rel='stylesheet' type='text/css' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js'></script>
+		<script>
+			var app = angular.module('app', []);
+
+			app.controller('messages', function($scope, $http){
+				setInterval(function(){
+					$scope.$apply(function(){
+						$http.get('/api/get_messages').then(function(data){
+							$scope.messages = data.data.split(',');
+						});
+					})
+				}, 100);
+
+				$scope.send_message = function(){
+					console.log('Sending message.');
+					var message = $scope.message;
+					$scope.message = '';
+					$http.get('/api/send_message?message=' + message);
+				}
+			});
+		</script>	
+	</head>
+	<body>
+		<div class='col-md-4 col-md-offset-4' ng-controller='messages'>
+			<div class='panel panel-default'>
+				<div class='panel-heading'>
+					Chat
+				</div>
+				<div class='panel-body'>
+					<table class='table table-striped'>
+						<tr ng-repeat='message in messages'>
+							<td>{{message}}</td>
+						</tr>
+					</table>
+					<div class='row'>
+						<div class='col-md-9'> 
+							<input type='text' class='form-control' ng-model='message'>
+						</div>
+						<div class='col-md-2'>
+							<button ng-click='send_message()' class='btn btn-success'>
+								Send
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
